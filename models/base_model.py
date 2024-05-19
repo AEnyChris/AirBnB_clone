@@ -9,8 +9,10 @@ class: BaseModel()
 
 from datetime import datetime
 from uuid import uuid4
+from . import storage
 
 time_format = '%Y-%m-%dT%H:%M:%S.%f'
+
 
 class BaseModel:
     """ Superclass Basemodel for the creation of other classes"""
@@ -32,6 +34,7 @@ class BaseModel:
             self.created_at = datetime.now()
             # the time instance was created and updated when object is changed
             self.updated_at = self.created_at
+            storage.new(self)
 
     def __str__(self):
         """changes the display of the instance"""
@@ -42,6 +45,7 @@ class BaseModel:
         the instance to the current time of change
         """
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """converts the instance into a dictionary object"""
