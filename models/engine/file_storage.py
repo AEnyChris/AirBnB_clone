@@ -30,12 +30,12 @@ class FileStorage:
         objs_to_dict = {}
         for key, obj in self.__objects.items():
             objs_to_dict[key] = obj.to_dict()
-        with open(__file_path, 'w') as fp:
-            json.dump(objs_to_dicti, fp)
+        with open(self.__file_path, 'w') as fp:
+            json.dump(objs_to_dict, fp)
 
     def reload(self):
-        if os.path.exists(__file_path):
-            with open(__file_path, 'r') as fp:
+        if os.path.exists(self.__file_path):
+            with open(self.__file_path, 'r') as fp:
                 reloaded_objs_dict = json.load(fp)
-        for key, dic in realoaded_objs_dict.items():
-            self.__objects[key] = Basemodel(**dic)
+            for key, dic in reloaded_objs_dict.items():
+                self.__objects[key] = BaseModel(**dic)
