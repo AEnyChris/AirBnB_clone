@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+"""This module implements a simple CLI"""
 
 import cmd
 import os, sys
@@ -20,12 +20,6 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         pass
-
-    def do_clear(self, arg):
-        os.system('clear')
-    
-    def help_clear(self):
-        print("clear the terminal\n")
 
 if __name__=='__main__':
     HBNBCommand().cmdloop()
