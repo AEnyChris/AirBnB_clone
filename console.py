@@ -58,7 +58,7 @@ class HBNBCommand(cmd.Cmd):
                 self.call_err_msg(id_missing)
                 return 0
 
-    def attr_check(self, line):
+    '''def attr_check(self, line):
         flag = self.id_check(line)
         if flag:
             args = flag[2]
@@ -71,7 +71,7 @@ class HBNBCommand(cmd.Cmd):
                 except:
                     self.call_err_msg(attr_missing)
                     return 0
-            elif len(args) > 3:
+            elif len(args) > 3:'''
 
 
 
