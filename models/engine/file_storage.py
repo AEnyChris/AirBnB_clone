@@ -7,8 +7,22 @@ import json
 import os
 from models.base_model import BaseModel
 from models.user import User
+from models.amenity import Amenity
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.review import Review
 
-classes = {"BaseModel":BaseModel, "User":User}
+classes = {
+        "BaseModel":BaseModel,
+        "User":User,
+        "Amenity":Amenity,
+        "City":City,
+        "Review":Review,
+        "Place":Place,
+        "State":State
+        }
 
 class FileStorage:
     """FileStorage class for the
@@ -40,4 +54,4 @@ class FileStorage:
             with open(self.__file_path, 'r') as fp:
                 reloaded_objs_dict = json.load(fp)
             for key, dic in reloaded_objs_dict.items():
-                self.__objects[key] = BaseModel(**dic)
+                self.__objects[key] = classes[key.split(".")[0]](**dic)

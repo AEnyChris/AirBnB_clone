@@ -5,10 +5,23 @@ import cmd
 import os, sys
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
+from models.amenity import Amenity
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.review import Review
 
 fs = FileStorage()
-
-classes = {"BaseModel":BaseModel}
+classes = {
+        "BaseModel":BaseModel,
+        "User":User,
+        "Amenity":Amenity,
+        "City":City,
+        "Review":Review,
+        "Place":Place,
+        "State":State
+        }
 
 cls_missing = "** class name missing **"
 cls_nonex = "** class doesn't exist **"
