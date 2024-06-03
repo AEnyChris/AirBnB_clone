@@ -63,12 +63,9 @@ class HBNBCommand(cmd.Cmd):
         if flag:
             args = flag[1]
             if len(args) > 1:
-                ids = []
                 fs.reload()
                 all_objs = fs.all()
-                for key in all_objs.keys():
-                    ids.append(key.split(".")[1])
-                if args[1] not in ids:
+                if f"{args[0]}.{args[1]}" not in all_objs.keys():
                     self.call_err_msg(inst_not_fnd)
                     return 0
                 return 1, all_objs, args
