@@ -2,6 +2,7 @@
 """This module implements a simple CLI"""
 
 import cmd
+import ast
 import os, sys
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
@@ -114,7 +115,6 @@ class HBNBCommand(cmd.Cmd):
             args = line.split()
             fs._FileStorage__objects.pop(f"{args[0]}.{args[1]}")
             fs.save()
-            print(f"instance {args[1]} destroyed")
 
 
     def do_all(self, line):
@@ -128,14 +128,76 @@ class HBNBCommand(cmd.Cmd):
                 obj_list = [str(all_objs[key]) for key in all_objs.keys() if key.startswith(args[0])]
                 print(obj_list)
 
+    def count(self, line):
+        all_objs = fs.all()
+        if self.class_check(line):
+            args = line.split()
+            obj_list = [str(all_objs[key]) for key in all_objs.keys() if key.startswith(args[0])]
+            print(len(obj_list))
+
 
     def do_update(self, line):
         """updates or adds attr to instance"""
+        args = line.split()
         if self.attr_check(line):
             args = line.split()
             key = f"{args[0]}.{args[1]}"
             setattr(fs._FileStorage__objects[key], args[2], args[3])
             fs.save()
+
+    def update2(self, *args, **kwargs):
+        """Processes dictionary attribute input"""
+        line = f"{args[0]} {args[1]}"
+        if self.id_check(line):
+            key = f"{args[0]}.{args[1]}"
+            for attr, value in kwargs.items():
+                setattr(fs._FileStorage__objects[key], attr, value)
+            fs.save()
+        
+
+ 
+    def onecmd(self, line):
+        """Define command formats"""
+        commands = {
+        "all": self.do_all,
+        "create": self.do_create,
+        "show": self.do_show,
+        "destroy": self.do_destroy,
+        "update":self.do_update,
+        # "update2":self.do_update2
+        "count": self.count
+        }
+        if "." in line:
+            try:
+                args = line.strip().split(".")
+                class_name = args[0]
+                command_line = args[1].split("(")
+                command = command_line[0]
+                parameter = command_line[1].strip(")")
+
+                if "{" in parameter and command == 'update':
+                    parameter = parameter.split(",", 1)
+                    idx = parameter[0].replace('"', '')
+                    if len(parameter) > 1:
+                        attr_dict = ast.literal_eval(parameter[1].strip())
+                        self.update2(class_name, idx, **attr_dict)
+                        return
+                    else:
+                        self.call_err_msg(attr_missing)
+                else:
+                    parameter = parameter.replace("," , "").replace('"', '')
+                    new_line = f"{class_name} {parameter}"
+            
+                if command not in commands.keys():
+                    cmd.Cmd.default(self, command)
+                else:
+                    commands[command](new_line.strip())
+            except Exception as e:
+                cmd.Cmd.default(self, line)
+
+                   
+        else:
+            cmd.Cmd.onecmd(self, line)
 
 
     def do_quit(self, arg):
